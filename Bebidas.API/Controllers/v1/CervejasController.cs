@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Bebidas.API.Contratos.v1;
+using Bebidas.API.Contratos;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -40,7 +41,7 @@ namespace Bebidas.API.Controllers.v1
         [HttpGet("{rotulo}")]
         [Produces("application/json", Type = typeof(Cerveja))]
         [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(404, Type = typeof(string))]
         public ActionResult<Cerveja> GetOne([FromRoute]string rotulo)
         {
             var cerveja = Cervejas.FirstOrDefault(c => c.Rotulo == rotulo);
@@ -52,11 +53,19 @@ namespace Bebidas.API.Controllers.v1
         }
 
         [HttpPost]
+        [ProducesResponseType(200, Type = typeof(string))]
+        [ProducesResponseType(500, Type = typeof(string))]
         public IActionResult Add([FromBody]Cerveja cerveja)
         {
-            Cervejas.Add(cerveja);
-
-            return Ok();
+            try
+            {
+                Cervejas.Add(cerveja);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         [HttpPut("{rotulo}")]
@@ -70,7 +79,7 @@ namespace Bebidas.API.Controllers.v1
             Cervejas.Remove(cervejaRetirada);
             Cervejas.Add(cerveja);
 
-            return Ok();
+            return Ok(cerveja.Rotulo);
         }
 
     }
