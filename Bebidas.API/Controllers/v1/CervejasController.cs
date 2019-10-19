@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Bebidas.API.Contratos.v1;
 using Bebidas.API.Contratos;
+using API.Infraestrutura.Base.Condicao;
+using API.Infraestrutura.Base.CaixaDeExecucao;
+using API.Infraestrutura.Contrato;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -38,13 +41,38 @@ namespace Bebidas.API.Controllers.v1
             return Ok(Cervejas);
         }
 
+
+
         [HttpGet("{rotulo}")]
         [Produces("application/json", Type = typeof(Cerveja))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404, Type = typeof(string))]
         public ActionResult<Cerveja> GetOne([FromRoute]string rotulo)
         {
-            var cerveja = Cervejas.FirstOrDefault(c => c.Rotulo == rotulo);
+            Func<global::API.Infraestrutura.Base.BancoDeDados.IConexao> ConexaoSQLServer = null;
+
+
+            PreCondicao
+                .Para("Obter uma cerveja")
+                .EhSatisfeitaCom("O rótulo precisa ser definido!", !string.IsNullOrWhiteSpace(rotulo))
+                .E("A lista de Cervejas não pode estar vazia!", Cervejas.Any());
+
+
+            var resultado = Resultado<Cerveja>
+                .DaOperacao("Obter uma cerveja")
+                .V1()
+                .SemGerenciarConexaoDoBancoDeDados()
+                .Rastrear("Rotulo", rotulo)
+                .Executar(() =>
+                        ResultadoDaOperacao<Cerveja>.ComValor(Cervejas.FirstOrDefault(c => c.Rotulo == rotulo)));
+
+            PosCondicao
+                .Para("Obter uma cerveja")
+                .NaoSatisfeitaCom("Resultado deve estar preenchido", resultado.Valor == null);
+
+
+
+            var cerveja = resultado.Valor;
 
             if (cerveja == null)
                 return NotFound($"Não encontrada a Cerveja '{rotulo}'");
