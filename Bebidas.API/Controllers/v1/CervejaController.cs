@@ -14,13 +14,13 @@ namespace Bebidas.API.Controllers.v1
 {
     [ApiController]
     [Route("v1/[controller]")]
-    public class CervejasController : ControllerBase
+    public class CervejaController : ControllerBase
     {
-        private readonly ILogger<CervejasController> _logger;
+        private readonly ILogger<CervejaController> _logger;
 
         private static List<Cerveja> Cervejas;
 
-        public CervejasController(ILogger<CervejasController> logger)
+        public CervejaController(ILogger<CervejaController> logger)
         {
             _logger = logger;
 
@@ -30,49 +30,41 @@ namespace Bebidas.API.Controllers.v1
                     new Cerveja{ Rotulo="Skol", Marca=Marca.Ambev, Tipo=TipoCerveja.Pilsen,  Apresentacao = new FormaApresentacao{ Formato=FormatoApresentacao.Garrafa, Litragem=1 } },
                     new Cerveja{ Rotulo="Vertigem", Marca=Marca.HocusPocus, Tipo=TipoCerveja.IPA},
                     new Cerveja{ Rotulo="Caium", Marca=Marca.Colorado, Tipo=TipoCerveja.APA },
+                    new Cerveja{ Rotulo="ApaCadabra", Marca=Marca.HocusPocus, Tipo=TipoCerveja.APA },
+                    new Cerveja{ Rotulo="Imperio", Marca=Marca.Ambev, Tipo=TipoCerveja.Pilsen },
                 };
         }
 
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(200)]
-        public IActionResult Get()
+        public IActionResult Get([FromQuery] int _pageLimit = 10, [FromQuery]int _offSet = 0)
         {
-            return Ok(Cervejas);
+            return Ok(Cervejas
+                .Skip(_offSet * _pageLimit)
+                .Take(_pageLimit));
         }
 
-
-
-        [HttpGet("{rotulo}")]
+        /// <summary>
+        /// Busca uma cerveja pelo rótulo
+        /// </summary>
+        /// <param name="rotulo"></param>
+        /// <returns>Retorna uma cerveja</returns>
+        /// <response code="200">Dados da cerveja obtida</response>
+        /// <response code="404">Cerveja não encontrada</response>   
+        [HttpGet("{rotulo}", Name = "ObterUmaCerveja")]
         [Produces("application/json", Type = typeof(Cerveja))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404, Type = typeof(string))]
-        public ActionResult<Cerveja> GetOne([FromRoute]string rotulo)
+        public ActionResult<Cerveja> ObterUmaCerveja([FromRoute]string rotulo)
         {
-            Func<global::API.Infraestrutura.Base.BancoDeDados.IConexao> ConexaoSQLServer = null;
-
-
             PreCondicao
                 .Para("Obter uma cerveja")
                 .EhSatisfeitaCom("O rótulo precisa ser definido!", !string.IsNullOrWhiteSpace(rotulo))
                 .E("A lista de Cervejas não pode estar vazia!", Cervejas.Any());
 
 
-            var resultado = Resultado<Cerveja>
-                .DaOperacao("Obter uma cerveja")
-                .V1()
-                .SemGerenciarConexaoDoBancoDeDados()
-                .Rastrear("Rotulo", rotulo)
-                .Executar(() =>
-                        ResultadoDaOperacao<Cerveja>.ComValor(Cervejas.FirstOrDefault(c => c.Rotulo == rotulo)));
-
-            PosCondicao
-                .Para("Obter uma cerveja")
-                .NaoSatisfeitaCom("Resultado deve estar preenchido", resultado.Valor == null);
-
-
-
-            var cerveja = resultado.Valor;
+            var cerveja = Cervejas.FirstOrDefault(c => c.Rotulo == rotulo);
 
             if (cerveja == null)
                 return NotFound($"Não encontrada a Cerveja '{rotulo}'");

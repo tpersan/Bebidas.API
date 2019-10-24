@@ -4,5 +4,14 @@
         <name>Bebidas.API</name>
     </assembly>
     <members>
+        <member name="M:Bebidas.API.Controllers.v1.CervejaController.ObterUmaCerveja(System.String)">
+            <summary>
+            Busca uma cerveja pelo rótulo
+            </summary>
+            <param name="rotulo"></param>
+            <returns>Retorna uma cerveja</returns>
+            <response code="200">Dados da cerveja obtida</response>
+            <response code="404">Cerveja não encontrada</response>   
+        </member>
     </members>
 </doc>
