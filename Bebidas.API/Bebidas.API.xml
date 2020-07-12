@@ -11,7 +11,7 @@
             <param name="rotulo"></param>
             <returns>Retorna uma cerveja</returns>
             <response code="200">Dados da cerveja obtida</response>
-            <response code="404">Cerveja não encontrada</response>   
+            <response code="404">Cerveja não encontrada</response>  
         </member>
     </members>
 </doc>

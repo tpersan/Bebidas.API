@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace Bebidas.API
 {
@@ -28,9 +27,9 @@ namespace Bebidas.API
                 
                 c.DescribeAllParametersInCamelCase();
 
-                string caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
-                string nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
-                string caminhoXmlDoc = Path.Combine(caminhoAplicacao, $"{nomeAplicacao}.xml");
+                var caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
+                var nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
+                var caminhoXmlDoc = Path.Combine(caminhoAplicacao, $"{nomeAplicacao}.xml");
 
                 c.IncludeXmlComments(caminhoXmlDoc);
             });

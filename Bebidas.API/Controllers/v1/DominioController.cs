@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Bebidas.API.Contratos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,24 +7,23 @@ using Microsoft.Extensions.Logging;
 namespace Bebidas.API.Controllers.v1
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("v1/dominios")]
     public class DominioController : ControllerBase
     {
-        public static List<string> Dominios;
+        private static List<string> dominios = new List<string>
+                {
+                    nameof(Fabricante),
+                    nameof(TipoCerveja),
+                    nameof(FormatoApresentacao)
+                };
+
+        public static List<string> Dominios { get => dominios; }
 
         private readonly ILogger<DominioController> _logger;
 
         public DominioController(ILogger<DominioController> logger)
         {
             _logger = logger;
-
-            if (Dominios == null)
-                Dominios = new List<string>
-                {
-                    "Marca",
-                    "TipoCerveja",
-                    "FormatoApresentacao"
-                };
         }
 
         [HttpGet]
@@ -51,10 +48,13 @@ namespace Bebidas.API.Controllers.v1
                 return NotFound(dominio);
 
             if (dominio == Dominios[0])
-                return Ok(Marca.Todos());
+                return Ok(Fabricante.Todos());
 
             if (dominio == Dominios[1])
                 return Ok(TipoCerveja.Todos());
+
+            if (dominio == Dominios[2])
+                return Ok(FormatoApresentacao.Todos());
 
             return StatusCode(500, dominio);
         }

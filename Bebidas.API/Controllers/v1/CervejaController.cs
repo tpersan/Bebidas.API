@@ -1,38 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Bebidas.API.Contratos.v1;
 using Bebidas.API.Contratos;
 using API.Infraestrutura.Base.Condicao;
-using API.Infraestrutura.Base.CaixaDeExecucao;
-using API.Infraestrutura.Contrato;
 
 namespace Bebidas.API.Controllers.v1
 {
     [ApiController]
-    [Route("v1/[controller]")]
+    [Route("v1/cervejas")]
     public class CervejaController : ControllerBase
     {
         private readonly ILogger<CervejaController> _logger;
 
-        private static List<Cerveja> Cervejas;
+        private static List<Cerveja> Cervejas = new List<Cerveja>
+        {
+            new Cerveja{ Rotulo="Skol", Fabricante=Fabricante.Ambev, TipoCerveja=TipoCerveja.Pilsen,  
+                Apresentacao = new FormaApresentacao{ Formato=FormatoApresentacao.Garrafa, Litragem=1 } },
+            new Cerveja{ Rotulo="Vertigem", Fabricante=Fabricante.HocusPocus, TipoCerveja=TipoCerveja.IPA},
+            new Cerveja{ Rotulo="Caium", Fabricante=Fabricante.Colorado, TipoCerveja=TipoCerveja.APA },
+            new Cerveja{ Rotulo="ApaCadabra", Fabricante=Fabricante.HocusPocus, TipoCerveja=TipoCerveja.APA },
+            new Cerveja{ Rotulo="Imperio", Fabricante=Fabricante.Ambev, TipoCerveja=TipoCerveja.Pilsen },
+        };
 
         public CervejaController(ILogger<CervejaController> logger)
         {
             _logger = logger;
-
-            if (Cervejas == null)
-                Cervejas = new List<Cerveja>
-                {
-                    new Cerveja{ Rotulo="Skol", Marca=Marca.Ambev, Tipo=TipoCerveja.Pilsen,  Apresentacao = new FormaApresentacao{ Formato=FormatoApresentacao.Garrafa, Litragem=1 } },
-                    new Cerveja{ Rotulo="Vertigem", Marca=Marca.HocusPocus, Tipo=TipoCerveja.IPA},
-                    new Cerveja{ Rotulo="Caium", Marca=Marca.Colorado, Tipo=TipoCerveja.APA },
-                    new Cerveja{ Rotulo="ApaCadabra", Marca=Marca.HocusPocus, Tipo=TipoCerveja.APA },
-                    new Cerveja{ Rotulo="Imperio", Marca=Marca.Ambev, Tipo=TipoCerveja.Pilsen },
-                };
         }
 
         [HttpGet]
@@ -51,8 +46,8 @@ namespace Bebidas.API.Controllers.v1
         /// <param name="rotulo"></param>
         /// <returns>Retorna uma cerveja</returns>
         /// <response code="200">Dados da cerveja obtida</response>
-        /// <response code="404">Cerveja não encontrada</response>   
-        [HttpGet("{rotulo}", Name = "ObterUmaCerveja")]
+        /// <response code="404">Cerveja não encontrada</response>  
+        [HttpGet("{rotulo}", Name = "Obter Uma Cerveja")]
         [Produces("application/json", Type = typeof(Cerveja))]
         [ProducesResponseType(200)]
         [ProducesResponseType(404, Type = typeof(string))]
@@ -61,8 +56,7 @@ namespace Bebidas.API.Controllers.v1
             PreCondicao
                 .Para("Obter uma cerveja")
                 .EhSatisfeitaCom("O rótulo precisa ser definido!", !string.IsNullOrWhiteSpace(rotulo))
-                .E("A lista de Cervejas não pode estar vazia!", Cervejas.Any());
-
+                .E("A lista de Cervejas não pode estar vazia!", Cervejas.Count>0);
 
             var cerveja = Cervejas.FirstOrDefault(c => c.Rotulo == rotulo);
 
@@ -91,7 +85,7 @@ namespace Bebidas.API.Controllers.v1
         [HttpPut("{rotulo}")]
         public IActionResult Update([FromRoute] string rotulo, [FromBody]Cerveja cerveja)
         {
-            var cervejaRetirada = Cervejas.FirstOrDefault(c => c.Rotulo == rotulo);
+            var cervejaRetirada = Cervejas.Find(c => c.Rotulo == rotulo);
 
             if (cervejaRetirada == null)
                 return NotFound($"Não encontrada a Cerveja '{rotulo}'");
