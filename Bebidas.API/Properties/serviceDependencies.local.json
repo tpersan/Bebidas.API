@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "appInsights1": {
-      "type": "appInsights.sdk",
-      "connectionId": "APPINSIGHTS_INSTRUMENTATIONKEY"
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroup1')]/providers/Microsoft.Insights/components/wsdevai",
+      "type": "appInsights.azure",
+      "connectionId": "APPINSIGHTS_INSTRUMENTATIONKEY",
+      "secretStore": "LocalSecretsFile"
     }
   }
 }

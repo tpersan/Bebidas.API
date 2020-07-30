@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Bebidas.API.Contratos.v1;
 using Bebidas.API.Contratos;
 using API.Infraestrutura.Base.Condicao;
-using contexto = API.Infraestrutura.Base.Contexto.ContextoPadrao.ContextoEstaticoPorThread;
 using API.Infraestrutura.Contrato;
 using API.Infraestrutura.Base.API;
 using API.Infraestrutura.Base.Contexto;
@@ -17,8 +14,6 @@ namespace Bebidas.API.Controllers.v1
     [Route("v1/cervejas")]
     public class CervejaController : BaseApiController
     {
-        //private readonly ILogger<CervejaController> _logger;
-
         private static List<Cerveja> Cervejas = new List<Cerveja>
         {
             new Cerveja{ Rotulo="Skol", Fabricante=Fabricante.Ambev, TipoCerveja=TipoCerveja.Pilsen,
@@ -36,9 +31,19 @@ namespace Bebidas.API.Controllers.v1
         [ProducesResponseType(200)]
         public IActionResult Get([FromQuery] int _pageLimit = 10, [FromQuery] int _offSet = 0)
         {
-            return Ok(Cervejas
-                .Skip(_offSet * _pageLimit)
-                .Take(_pageLimit));
+            var cervejas = Resultado<List<Cerveja>>()
+                .DaOperacao("Pesquisar cervejas")
+                .V1()
+                .SemGerenciarConexaoDoBancoDeDados()
+                .Executar(() =>
+                {                    
+                    return ResultadoDaOperacao<List<Cerveja>>.ComValor(Cervejas
+                                .Skip(_offSet * _pageLimit)
+                                .Take(_pageLimit)
+                                .ToList());
+                });
+
+            return Ok(cervejas.Valor);
         }
 
         /// <summary>
@@ -79,27 +84,50 @@ namespace Bebidas.API.Controllers.v1
         [ProducesResponseType(500, Type = typeof(string))]
         public IActionResult Add([FromBody] Cerveja cerveja)
         {
-            try
-            {
-                Cervejas.Add(cerveja);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
-            }
+            PreCondicao
+              .Para("Adicionar uma cerveja")
+              .EhSatisfeitaCom("Preencha os dados da cerveja!", cerveja != null)
+              .E("O rótulo deve ser preenchido", !string.IsNullOrWhiteSpace(cerveja.Rotulo));
+
+            Resultado<bool>()
+                .DaOperacao("Adicionar uma cerveja")
+                .V1()
+                .SemGerenciarConexaoDoBancoDeDados()
+                .Rastrear("Rotulo", cerveja.Rotulo)
+                .Executar(() =>
+                {
+                    Cervejas.Add(cerveja);
+                    return ResultadoDaOperacao<bool>.ComValor(true);
+                });
+
+            return Ok();
         }
 
         [HttpPut("{rotulo}")]
         public IActionResult Update([FromRoute] string rotulo, [FromBody] Cerveja cerveja)
         {
+            PreCondicao
+              .Para("Atualizar uma cerveja")
+              .EhSatisfeitaCom("Preencha os dados da cerveja!", cerveja != null)
+              .E("O rótulo deve ser preenchido", !string.IsNullOrWhiteSpace(cerveja.Rotulo))
+              .E("O rótulo a alterar deve ser o mesmo do rótulo atualizado", rotulo == cerveja.Rotulo);
+
             var cervejaRetirada = Cervejas.Find(c => c.Rotulo == rotulo);
 
             if (cervejaRetirada == null)
                 return NotFound($"Não encontrada a Cerveja '{rotulo}'");
 
-            Cervejas.Remove(cervejaRetirada);
-            Cervejas.Add(cerveja);
+            Resultado<bool>()
+                .DaOperacao("Atualizar uma cerveja")
+                .V1()
+                .SemGerenciarConexaoDoBancoDeDados()
+                .Rastrear("rotulo", cerveja.Rotulo)
+                .Executar(() =>
+                {
+                    Cervejas.Remove(cervejaRetirada);
+                    Cervejas.Add(cerveja);
+                    return ResultadoDaOperacao<bool>.ComValor(true);
+                });
 
             return Ok(cerveja.Rotulo);
         }
