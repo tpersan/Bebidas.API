@@ -7,6 +7,7 @@ using API.Infraestrutura.Base.Condicao;
 using API.Infraestrutura.Contrato;
 using API.Infraestrutura.Base.API;
 using API.Infraestrutura.Base.Contexto;
+using System;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -89,16 +90,24 @@ namespace Bebidas.API.Controllers.v1
               .EhSatisfeitaCom("Preencha os dados da cerveja!", cerveja != null)
               .E("O rótulo deve ser preenchido", !string.IsNullOrWhiteSpace(cerveja.Rotulo));
 
-            Resultado<bool>()
+            var resultado = Resultado<bool>()
                 .DaOperacao("Adicionar uma cerveja")
                 .V1()
                 .SemGerenciarConexaoDoBancoDeDados()
                 .Rastrear("Rotulo", cerveja.Rotulo)
                 .Executar(() =>
                 {
+
+                    if (cerveja.Rotulo == "Snake Venom")
+                        throw new Exception("Essa cerveja é muito forte!");
+
+
                     Cervejas.Add(cerveja);
                     return ResultadoDaOperacao<bool>.ComValor(true);
                 });
+
+            if (resultado.HouveErrosDuranteProcessamento)
+                return StatusCode(500, resultado.Mensagens.First());
 
             return Ok();
         }
