@@ -37,9 +37,7 @@ namespace Bebidas.API.Controllers.v1
                 .DaOperacao("Listar Dominios")
                 .V1()
                 .SemGerenciarConexaoDoBancoDeDados()
-                .Executar(
-                    () => ResultadoDaOperacao<List<string>>.ComValor(Dominios);
-
+                .Executar(() => ResultadoDaOperacao<List<string>>.ComValor(Dominios));
 
             return Ok(dominiosDisponiveis.Valor);
         }
