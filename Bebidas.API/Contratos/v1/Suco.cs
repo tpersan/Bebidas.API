@@ -5,6 +5,7 @@
         public string Fruta { get; set; }
         public decimal PercentualMistura { get; set; }
     }
+
 }
 
 

@@ -13,5 +13,23 @@
             <response code="200">Dados da cerveja obtida</response>
             <response code="404">Cerveja não encontrada</response>  
         </member>
+        <member name="M:Bebidas.API.Controllers.v1.MathController.Calcular(Bebidas.API.Contratos.v1.Soma)">
+            <summary>
+            Realiza uma Operação matemática
+            </summary>
+            <param name="operacao"></param>
+            <returns>Retorna o resultado da operação matemática</returns>
+            <response code="200">Resultado do cálculo</response>
+            <response code="500">Ops</response>
+        </member>
+        <member name="M:Bebidas.API.Controllers.v2.MathController.Calcular(Bebidas.API.Contratos.v2.OperacaoMatematica)">
+            <summary>
+            Realiza uma Operação matemática
+            </summary>
+            <param name="operacao"></param>
+            <returns>Retorna o resultado da operação matemática</returns>
+            <response code="200">Resultado do cálculo</response>
+            <response code="500">Ops</response>
+        </member>
     </members>
 </doc>

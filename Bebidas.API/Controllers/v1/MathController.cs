@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Bebidas.API.Contratos;
+using Bebidas.API.Contratos.v1;
+using Microsoft.EntityFrameworkCore.Design.Internal;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -12,25 +14,21 @@ namespace Bebidas.API.Controllers.v1
     {
         private readonly ILogger<MathController> _logger;
 
-        public MathController(ILogger<MathController> logger)
-        {
-            _logger = logger;
-        }
+        public MathController(ILogger<MathController> logger) { _logger = logger; }
 
-        [HttpGet]
+        /// <summary>
+        /// Realiza uma Operação matemática
+        /// </summary>
+        /// <param name="operacao"></param>
+        /// <returns>Retorna o resultado da operação matemática</returns>
+        /// <response code="200">Resultado do cálculo</response>
+        /// <response code="500">Ops</response>
+        [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(200)]
-        public ActionResult<int> Get(TipoCalculo tipo, int v1, int v2)
+        public ActionResult<int> Calcular(Soma operacao)
         {
-            return Ok((v1 + v2).ToString());
+            return Ok((operacao.primeiroValor + operacao.segundooValor));
         }
-
-
-        public class TipoCalculo
-        {
-            public static string Soma { get { return "Soma"; } }
-        }
-
-
     }
 }

@@ -1,4 +1,7 @@
 using System.IO;
+using API.Infraestrutura.Base;
+using API.Infraestrutura.Base.Contexto;
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +22,24 @@ namespace Bebidas.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            var configuration = new ConfigurationBuilder()
+                  .SetBasePath(Directory.GetCurrentDirectory())
+                  .AddEnvironmentVariables()
+                  .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                  .Build();
+                        
+            Recurso.DefinirOrigemDoRecurso(new RecursoDeConfiguracao(configuration));
 
+            services.AddHttpContextAccessor();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Bebidas.API", Version = "v1" });
                 
                 c.DescribeAllParametersInCamelCase();
+                c.DescribeStringEnumsInCamelCase();
 
                 var caminhoAplicacao = PlatformServices.Default.Application.ApplicationBasePath;
                 var nomeAplicacao = PlatformServices.Default.Application.ApplicationName;
@@ -34,7 +48,10 @@ namespace Bebidas.API
                 c.IncludeXmlComments(caminhoXmlDoc);
             });
 
+            services.AddScoped<IContexto, ContextoRequest>();
+
             services.AddMvcCore().AddApiExplorer();
+            services.AddApplicationInsightsTelemetry(Configuration["ea501d85-6435-48ff-9a2e-10a66fa39fd2"]); 
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -47,6 +64,9 @@ namespace Bebidas.API
             {
                 app.UseHsts();
             }
+
+            app.UseApplicationInsightsRequestTelemetry();
+            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseHttpsRedirection();
 

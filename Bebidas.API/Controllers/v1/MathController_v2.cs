@@ -1,17 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Bebidas.API.Contratos.v2;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Bebidas.API.Controllers.v2
 {
-    public class ParametroCalculo
-    {
-        public string TipoCalculo { get; set; }
-        public decimal Valor1 { get; set; }
-        public decimal Valor2 { get; set; }
-    }
-
     [ApiController]
     [Route("v2/[controller]")]
     public class MathController : ControllerBase
@@ -23,23 +15,32 @@ namespace Bebidas.API.Controllers.v2
             _logger = logger;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Realiza uma Operação matemática
+        /// </summary>
+        /// <param name="operacao"></param>
+        /// <returns>Retorna o resultado da operação matemática</returns>
+        /// <response code="200">Resultado do cálculo</response>
+        /// <response code="500">Ops</response>
+        [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(200)]
-        public ActionResult<decimal> Get(v2.ParametroCalculo parametro)
+        public ActionResult<decimal> Calcular(OperacaoMatematica operacao)
         {
-            return Ok((parametro.Valor1 + parametro.Valor2).ToString());
+            switch (operacao.tipoCalculo)
+            {
+                case TipoCalculo.Soma:
+                    return Ok(operacao.primeiroValor + operacao.segundooValor);
+                case TipoCalculo.Multiplicacao:
+                    return Ok(operacao.primeiroValor * operacao.segundooValor);
+                case TipoCalculo.Divisao:
+                    return Ok(operacao.primeiroValor / operacao.segundooValor);
+                case TipoCalculo.Subtracao:
+                    return Ok(operacao.primeiroValor - operacao.segundooValor);
+                default:
+                    return BadRequest();
+            }
         }
-
-
-        public class TipoCalculo
-        {
-            public static string Soma { get { return "Soma"; } }
-            public static string Divisao { get { return "Divisao"; } }
-        }
-
-
-
 
     }
 }
