@@ -8,6 +8,10 @@ using API.Infraestrutura.Contrato;
 using API.Infraestrutura.Base.API;
 using API.Infraestrutura.Base.Contexto;
 using System;
+using Bebidas.Implementacao.BD;
+using API.Infraestrutura.Base.BancoDeDados;
+using Bebidas.Implementacao.Servico;
+using Newtonsoft.Json;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -15,6 +19,9 @@ namespace Bebidas.API.Controllers.v1
     [Route("v1/cervejas")]
     public class CervejaController : BaseApiController
     {
+        private ICervejaServico Servico;
+        private BancoDeDadosConexao conexao;
+
         private static List<Cerveja> Cervejas = new List<Cerveja>
         {
             new Cerveja{ Rotulo="Skol", Fabricante=Fabricante.Ambev, TipoCerveja=TipoCerveja.Pilsen,
@@ -25,7 +32,13 @@ namespace Bebidas.API.Controllers.v1
             new Cerveja{ Rotulo="Imperio", Fabricante=Fabricante.Ambev, TipoCerveja=TipoCerveja.Pilsen },
         };
 
-        public CervejaController(IContexto contexto) : base(contexto) { }
+        public CervejaController(IContexto contexto
+            , ICervejaServico _servico
+            , BancoDeDadosConexao _conexao) : base(contexto)
+        {
+            Servico = _servico;
+            conexao = _conexao;
+        }
 
         [HttpGet]
         [Produces("application/json")]
@@ -37,7 +50,7 @@ namespace Bebidas.API.Controllers.v1
                 .V1()
                 .SemGerenciarConexaoDoBancoDeDados()
                 .Executar(() =>
-                {                    
+                {
                     return ResultadoDaOperacao<List<Cerveja>>.ComValor(Cervejas
                                 .Skip(_offSet * _pageLimit)
                                 .Take(_pageLimit)
@@ -93,7 +106,7 @@ namespace Bebidas.API.Controllers.v1
             var resultado = Resultado<bool>()
                 .DaOperacao("Adicionar uma cerveja")
                 .V1()
-                .SemGerenciarConexaoDoBancoDeDados()
+                .GerenciandoConexaoDoBancoDeDados(() => conexao.Conexao())
                 .Rastrear("Rotulo", cerveja.Rotulo)
                 .Executar(() =>
                 {
@@ -101,8 +114,20 @@ namespace Bebidas.API.Controllers.v1
                     if (cerveja.Rotulo == "Snake Venom")
                         throw new Exception("Essa cerveja é muito forte!");
 
-
                     Cervejas.Add(cerveja);
+
+                    Servico.IncluirCerveja(new Implementacao.Dto.CervejaDto
+                    {
+                        Nome = cerveja.Rotulo,
+                        Dados = JsonConvert.SerializeObject(cerveja, new JsonSerializerSettings
+                        {
+                            Formatting = Formatting.Indented,
+                            DateFormatString = "dd/MM/yyyy",
+                            NullValueHandling = NullValueHandling.Ignore
+                        })
+                    });
+
+
                     return ResultadoDaOperacao<bool>.ComValor(true);
                 });
 

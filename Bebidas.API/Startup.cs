@@ -1,7 +1,12 @@
 using System.IO;
 using API.Infraestrutura.Base;
+using API.Infraestrutura.Base.BancoDeDados;
 using API.Infraestrutura.Base.Contexto;
 using Autofac;
+using Autofac.Core;
+using Bebidas.Implementacao.BD;
+using Bebidas.Implementacao.Repositorio.Inclusao;
+using Bebidas.Implementacao.Servico;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,17 +32,17 @@ namespace Bebidas.API
                   .AddEnvironmentVariables()
                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                   .Build();
-                        
+
             Recurso.DefinirOrigemDoRecurso(new RecursoDeConfiguracao(configuration));
 
             services.AddHttpContextAccessor();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Bebidas.API", Version = "v1" });
-                
+
                 c.DescribeAllParametersInCamelCase();
                 c.DescribeStringEnumsInCamelCase();
 
@@ -48,10 +53,16 @@ namespace Bebidas.API
                 c.IncludeXmlComments(caminhoXmlDoc);
             });
 
-            services.AddScoped<IContexto, ContextoRequest>();
+            services.AddTransient<IContexto, ContextoRequest>();
+
+            services.AddSingleton<IBancoDeDados, BancoDeDados>();
+            services.AddSingleton<BancoDeDadosConexao>();
+
+            services.AddScoped<ICervejaServico, CervejaServico>();
+            services.AddScoped<IInclusaoCerveja, InclusaoCerveja>();
 
             services.AddMvcCore().AddApiExplorer();
-            services.AddApplicationInsightsTelemetry(Configuration["ea501d85-6435-48ff-9a2e-10a66fa39fd2"]); 
+            services.AddApplicationInsightsTelemetry(Configuration["ea501d85-6435-48ff-9a2e-10a66fa39fd2"]);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -65,7 +76,6 @@ namespace Bebidas.API
                 app.UseHsts();
             }
 
-            app.UseApplicationInsightsRequestTelemetry();
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseHttpsRedirection();

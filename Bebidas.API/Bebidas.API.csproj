@@ -36,6 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bebidas.Contratos\Bebidas.Contratos.csproj" />
+    <ProjectReference Include="..\Bebidas.Implementacao\Bebidas.Implementacao.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
