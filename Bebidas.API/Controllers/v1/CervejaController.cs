@@ -10,8 +10,6 @@ using API.Infraestrutura.Base.Contexto;
 using System;
 using API.Infraestrutura.Base.BancoDeDados;
 using Bebidas.Implementacao.Servico;
-using Newtonsoft.Json;
-using System.Collections.Specialized;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -114,21 +112,11 @@ namespace Bebidas.API.Controllers.v1
                 {
 
                     if (cerveja.Rotulo == "Snake Venom")
-                        throw new Exception("Essa cerveja é muito forte!");
+                        throw new InvalidOperationException("Essa cerveja é muito forte!");
 
                     Cervejas.Add(cerveja);
 
-                    _servico.IncluirCerveja(new Implementacao.Dto.CervejaDto
-                    {
-                        Nome = cerveja.Rotulo,
-                        Dados = JsonConvert.SerializeObject(cerveja, new JsonSerializerSettings
-                        {
-                            Formatting = Formatting.Indented,
-                            DateFormatString = "dd/MM/yyyy",
-                            NullValueHandling = NullValueHandling.Ignore
-                        })
-                    });
-
+                    _servico.IncluirCerveja(cerveja);
 
                     return ResultadoDaOperacao<bool>.ComValor(true);
                 });

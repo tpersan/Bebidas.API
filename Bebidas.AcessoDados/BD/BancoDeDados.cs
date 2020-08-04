@@ -2,7 +2,7 @@
 using API.Infraestrutura.Base.BancoDeDados;
 using System.Configuration;
 
-namespace Bebidas.Implementacao.BD
+namespace Bebidas.AcessoDados.BD
 {
     public class BancoDeDados : IBancoDeDados
     {

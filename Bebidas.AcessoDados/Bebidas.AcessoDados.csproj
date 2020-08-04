@@ -6,11 +6,10 @@
 
   <ItemGroup>
     <PackageReference Include="API.Infraestrutura.Base" Version="3.0.1.163554" />
-    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Bebidas.AcessoDados\Bebidas.AcessoDados.csproj" />
+    <ProjectReference Include="..\Bebidas.Contratos\Bebidas.Contratos.csproj" />
   </ItemGroup>
 
 </Project>

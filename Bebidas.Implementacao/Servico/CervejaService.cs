@@ -1,5 +1,5 @@
-﻿using Bebidas.Implementacao.Dto;
-using Bebidas.Implementacao.Repositorio.Inclusao;
+﻿using Bebidas.AcessoDados.Atualizacao;
+using Bebidas.API.Contratos.v1;
 using Bebidas.Implementacao.ServiceBus;
 
 namespace Bebidas.Implementacao.Servico
@@ -7,7 +7,7 @@ namespace Bebidas.Implementacao.Servico
     public class CervejaServico : ICervejaServico
     {
         private readonly IInclusaoCerveja _inclusaoCerveja;
-        private IServiceBusTopicService _serviceBus;
+        private readonly IServiceBusTopicService _serviceBus;
 
         public CervejaServico(IInclusaoCerveja inclusaoCerveja, IServiceBusTopicService serviceBusTopico)
         {
@@ -16,10 +16,10 @@ namespace Bebidas.Implementacao.Servico
         }
 
 
-        public void IncluirCerveja(CervejaDto cerveja)
+        public void IncluirCerveja(Cerveja cerveja)
         {
             _inclusaoCerveja.Inserir(cerveja);
-            _serviceBus.EnviarMensagem("CervejaIncluida", cerveja.Dados);            
+            _serviceBus.EnviarMensagem("CervejaIncluida", cerveja.Dados);
         }
 
 

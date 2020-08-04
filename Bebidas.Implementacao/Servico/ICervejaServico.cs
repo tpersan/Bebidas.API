@@ -1,9 +1,9 @@
-﻿using Bebidas.Implementacao.Dto;
+﻿using Bebidas.API.Contratos.v1;
 
 namespace Bebidas.Implementacao.Servico
 {
     public interface ICervejaServico
     {
-        void IncluirCerveja(CervejaDto cerveja);
+        void IncluirCerveja(Cerveja cerveja);
     }
 }

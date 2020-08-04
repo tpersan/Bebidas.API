@@ -1,9 +1,0 @@
-﻿namespace Bebidas.Implementacao.Dto
-{
-    public class CervejaDto
-    {
-        public int Id { get; set; }
-        public string Nome { get; set; }
-        public string Dados { get; set; }
-    }
-}

@@ -1,7 +1,7 @@
 ﻿using API.Infraestrutura.Base.BancoDeDados;
-using Bebidas.Implementacao.Dto;
+using Bebidas.API.Contratos.v1;
 
-namespace Bebidas.Implementacao.Repositorio.Inclusao
+namespace Bebidas.AcessoDados.Atualizacao
 {
     public class InclusaoCerveja : Atualizacao<long>, IInclusaoCerveja
     {
@@ -13,12 +13,12 @@ namespace Bebidas.Implementacao.Repositorio.Inclusao
             INSERT INTO CERVEJAS (CERVEJA, DADOS) 
             VALUES(#CERVEJA#, #DADOS#);";
 
-        public int Inserir(CervejaDto cerveja)
+        public int Inserir(Cerveja cerveja)
         {
             var resultado = Executar(c =>
             {
-                c.AdicionarParametroDeEntrada<string>("CERVEJA", cerveja.Nome);
-                c.AdicionarParametroDeEntrada<string>("DADOS", cerveja.Dados);
+                c.AdicionarParametroDeEntrada("CERVEJA", cerveja.Rotulo);
+                c.AdicionarParametroDeEntrada("DADOS", cerveja.Dados);
                 c.AdicionarParametroDeSaidaDoTipoIdentidade<int>("Id");
             });
 
