@@ -8,10 +8,10 @@ using API.Infraestrutura.Contrato;
 using API.Infraestrutura.Base.API;
 using API.Infraestrutura.Base.Contexto;
 using System;
-using Bebidas.Implementacao.BD;
 using API.Infraestrutura.Base.BancoDeDados;
 using Bebidas.Implementacao.Servico;
 using Newtonsoft.Json;
+using System.Collections.Specialized;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -19,8 +19,10 @@ namespace Bebidas.API.Controllers.v1
     [Route("v1/cervejas")]
     public class CervejaController : BaseApiController
     {
-        private ICervejaServico Servico;
-        private BancoDeDadosConexao conexao;
+        private readonly ICervejaServico _servico;
+        private readonly BancoDeDadosConexao _conexao;
+
+        private const string nomeRotulo = "rotulo";
 
         private static List<Cerveja> Cervejas = new List<Cerveja>
         {
@@ -33,11 +35,11 @@ namespace Bebidas.API.Controllers.v1
         };
 
         public CervejaController(IContexto contexto
-            , ICervejaServico _servico
-            , BancoDeDadosConexao _conexao) : base(contexto)
+            , ICervejaServico servico
+            , BancoDeDadosConexao conexao) : base(contexto)
         {
-            Servico = _servico;
-            conexao = _conexao;
+            this._servico = servico;
+            this._conexao = conexao;
         }
 
         [HttpGet]
@@ -82,7 +84,7 @@ namespace Bebidas.API.Controllers.v1
                 .DaOperacao("Obter uma Cerveja")
                 .V1()
                 .SemGerenciarConexaoDoBancoDeDados()
-                .Rastrear("Rotulo", rotulo)
+                .Rastrear(nomeRotulo, rotulo)
                 .Executar(
                     () => ResultadoDaOperacao<Cerveja>.ComValor(Cervejas.FirstOrDefault(c => c.Rotulo == rotulo)));
 
@@ -106,8 +108,8 @@ namespace Bebidas.API.Controllers.v1
             var resultado = Resultado<bool>()
                 .DaOperacao("Adicionar uma cerveja")
                 .V1()
-                .GerenciandoConexaoDoBancoDeDados(() => conexao.Conexao())
-                .Rastrear("Rotulo", cerveja.Rotulo)
+                .GerenciandoConexaoDoBancoDeDados(() => _conexao.Conexao())
+                .Rastrear(nomeRotulo, cerveja.Rotulo)
                 .Executar(() =>
                 {
 
@@ -116,7 +118,7 @@ namespace Bebidas.API.Controllers.v1
 
                     Cervejas.Add(cerveja);
 
-                    Servico.IncluirCerveja(new Implementacao.Dto.CervejaDto
+                    _servico.IncluirCerveja(new Implementacao.Dto.CervejaDto
                     {
                         Nome = cerveja.Rotulo,
                         Dados = JsonConvert.SerializeObject(cerveja, new JsonSerializerSettings
@@ -155,7 +157,7 @@ namespace Bebidas.API.Controllers.v1
                 .DaOperacao("Atualizar uma cerveja")
                 .V1()
                 .SemGerenciarConexaoDoBancoDeDados()
-                .Rastrear("rotulo", cerveja.Rotulo)
+                .Rastrear(nomeRotulo, cerveja.Rotulo)
                 .Executar(() =>
                 {
                     Cervejas.Remove(cervejaRetirada);

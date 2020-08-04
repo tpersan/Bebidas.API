@@ -1,10 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Bebidas.API.Contratos;
 using Bebidas.API.Contratos.v1;
-using Microsoft.EntityFrameworkCore.Design.Internal;
 
 namespace Bebidas.API.Controllers.v1
 {

@@ -2,10 +2,9 @@ using System.IO;
 using API.Infraestrutura.Base;
 using API.Infraestrutura.Base.BancoDeDados;
 using API.Infraestrutura.Base.Contexto;
-using Autofac;
-using Autofac.Core;
 using Bebidas.Implementacao.BD;
 using Bebidas.Implementacao.Repositorio.Inclusao;
+using Bebidas.Implementacao.ServiceBus;
 using Bebidas.Implementacao.Servico;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -60,6 +59,8 @@ namespace Bebidas.API
 
             services.AddScoped<ICervejaServico, CervejaServico>();
             services.AddScoped<IInclusaoCerveja, InclusaoCerveja>();
+
+            services.AddSingleton<IServiceBusTopicService, ServiceBusTopicService>();
 
             services.AddMvcCore().AddApiExplorer();
             services.AddApplicationInsightsTelemetry(Configuration["ea501d85-6435-48ff-9a2e-10a66fa39fd2"]);

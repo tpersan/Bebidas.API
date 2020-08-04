@@ -59,5 +59,9 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Cervejas.sql" />
+    <Build Include="TipoCerveja.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="CargaInicial.sql" />
   </ItemGroup>
 </Project>
