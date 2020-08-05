@@ -6,6 +6,8 @@ using Bebidas.AcessoDados.Atualizacao;
 using Bebidas.Implementacao.BD;
 using Bebidas.Implementacao.ServiceBus;
 using Bebidas.Implementacao.Servico;
+using Microsoft.ApplicationInsights.AspNetCore;
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -62,6 +64,10 @@ namespace Bebidas.API
 
             services.AddSingleton<IServiceBusTopicService, ServiceBusTopicService>();
 
+            services.AddApplicationInsightsTelemetry();
+            services.ConfigureTelemetryModule<RequestTrackingTelemetryModule>((module, o) => { o.DependencyCollectionOptions.EnableLegacyCorrelationHeadersInjection = true; });
+            services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
+
             services.AddMvcCore().AddApiExplorer();
         }
 
@@ -73,6 +79,8 @@ namespace Bebidas.API
                 app.UseHsts();
 
             app.UseHttpsRedirection();
+
+            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseSwagger();
 
