@@ -24,7 +24,7 @@ namespace Bebidas.API
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
             var configuration = new ConfigurationBuilder()
                   .SetBasePath(Directory.GetCurrentDirectory())

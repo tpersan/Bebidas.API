@@ -16,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bebidas.Implementacao", "Be
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bebidas.Contratos", "Bebidas.Contratos\Bebidas.Contratos.csproj", "{DB4D18E1-9C9E-4A4E-89CE-2795B5E940E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bebidas.AcessoDados", "Bebidas.AcessoDados\Bebidas.AcessoDados.csproj", "{102BA1A5-77A5-4818-BCD6-8A085EF9EE7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bebidas.AcessoDados", "Bebidas.AcessoDados\Bebidas.AcessoDados.csproj", "{102BA1A5-77A5-4818-BCD6-8A085EF9EE7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bebidas.Tests", "Bebidas.Tests\Bebidas.Tests.csproj", "{A6B54A78-9DD5-4D82-9931-486CF6BD8DEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{102BA1A5-77A5-4818-BCD6-8A085EF9EE7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{102BA1A5-77A5-4818-BCD6-8A085EF9EE7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{102BA1A5-77A5-4818-BCD6-8A085EF9EE7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6B54A78-9DD5-4D82-9931-486CF6BD8DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6B54A78-9DD5-4D82-9931-486CF6BD8DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6B54A78-9DD5-4D82-9931-486CF6BD8DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6B54A78-9DD5-4D82-9931-486CF6BD8DEB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
