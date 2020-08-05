@@ -19,7 +19,7 @@ namespace Bebidas.Implementacao.Servico
         public void IncluirCerveja(Cerveja cerveja)
         {
             _inclusaoCerveja.Inserir(cerveja);
-            _serviceBus.EnviarMensagem("CervejaIncluida", cerveja.Dados);
+            _serviceBus.EnviarMensagem("CervejaIncluida", cerveja.ConvertDados());
         }
 
 

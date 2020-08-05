@@ -14,28 +14,28 @@ namespace Bebidas.API.Contratos.v1
         public FormaApresentacao Apresentacao { get; set; }
         public decimal TeorAlcoolico { get; set; }
         public decimal TemperaturaIndicadaConsumo { get; set; }
+    }
 
-        public string Dados
+
+    public static class CervejaExtensions
+    {
+        public static string ConvertDados(this Cerveja cerveja)
         {
-            get
-            {
-                if (string.IsNullOrEmpty(this.Rotulo))
-                    return "Rótulo não foi Definido!";
+            if (string.IsNullOrEmpty(cerveja.Rotulo))
+                return "Rótulo não foi Definido!";
 
-                return JsonConvert.SerializeObject(this, new JsonSerializerSettings
+            return JsonConvert.SerializeObject(cerveja, new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new DefaultContractResolver
                 {
-                    Formatting = Formatting.Indented,
-                    NullValueHandling = NullValueHandling.Ignore,
-                    ContractResolver = new DefaultContractResolver
-                    {
-                        NamingStrategy = new CamelCaseNamingStrategy()
-                    }
-                });
-            }
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                }
+            });
         }
 
     }
-
 
 }
 

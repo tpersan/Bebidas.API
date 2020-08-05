@@ -6,7 +6,6 @@ using API.Infraestrutura.Base.Contexto;
 using API.Infraestrutura.Contrato;
 using Bebidas.API.Contratos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace Bebidas.API.Controllers.v1
 {
@@ -15,15 +14,13 @@ namespace Bebidas.API.Controllers.v1
     public class DominioController : BaseApiController
     {
         private static List<string> dominios = new List<string>
-                {
-                    nameof(Fabricante),
-                    nameof(TipoCerveja),
-                    nameof(FormatoApresentacao)
-                };
+        {
+            nameof(Fabricante),
+            nameof(TipoCerveja),
+            nameof(FormatoApresentacao)
+        };
 
         public static List<string> Dominios { get => dominios; }
-
-        private readonly ILogger<DominioController> _logger;
 
         public DominioController(IContexto contexto) : base(contexto) { }
 

@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Bebidas.AcessoDados\Bebidas.AcessoDados.csproj" />
     <ProjectReference Include="..\Bebidas.Contratos\Bebidas.Contratos.csproj" />
     <ProjectReference Include="..\Bebidas.Implementacao\Bebidas.Implementacao.csproj" />
   </ItemGroup>

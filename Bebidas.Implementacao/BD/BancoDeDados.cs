@@ -2,7 +2,7 @@
 using API.Infraestrutura.Base.BancoDeDados;
 using System.Configuration;
 
-namespace Bebidas.AcessoDados.BD
+namespace Bebidas.Implementacao.BD
 {
     public class BancoDeDados : IBancoDeDados
     {
@@ -16,7 +16,7 @@ namespace Bebidas.AcessoDados.BD
 
         public string ObterID()
         {
-            return "d98ebf39-613e-4dea-8ab9-1adad0dc358d";
+            return System.Guid.NewGuid().ToString();
         }
     }
 }

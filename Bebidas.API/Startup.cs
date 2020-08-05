@@ -3,7 +3,7 @@ using API.Infraestrutura.Base;
 using API.Infraestrutura.Base.BancoDeDados;
 using API.Infraestrutura.Base.Contexto;
 using Bebidas.AcessoDados.Atualizacao;
-using Bebidas.AcessoDados.BD;
+using Bebidas.Implementacao.BD;
 using Bebidas.Implementacao.ServiceBus;
 using Bebidas.Implementacao.Servico;
 using Microsoft.AspNetCore.Builder;
@@ -66,16 +66,12 @@ namespace Bebidas.API
             services.AddApplicationInsightsTelemetry(Configuration["ea501d85-6435-48ff-9a2e-10a66fa39fd2"]);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
             else
-            {
                 app.UseHsts();
-            }
 
             app.UseApplicationInsightsExceptionTelemetry();
 
