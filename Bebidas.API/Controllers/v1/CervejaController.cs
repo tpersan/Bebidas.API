@@ -82,7 +82,7 @@ namespace Bebidas.API.Controllers.v1
                 .DaOperacao("Obter uma Cerveja")
                 .V1()
                 .SemGerenciarConexaoDoBancoDeDados()
-                //.Rastrear(nomeRotulo, rotulo)
+                .Rastrear(nomeRotulo, rotulo)
                 .Executar(
                     () => ResultadoDaOperacao<Cerveja>.ComValor(Cervejas.FirstOrDefault(c => c.Rotulo == rotulo)));
 
@@ -107,8 +107,7 @@ namespace Bebidas.API.Controllers.v1
                 .DaOperacao("Adicionar uma cerveja")
                 .V1()
                 .GerenciandoConexaoDoBancoDeDados(() => _conexao.Conexao())
-                .UtilizandoTransacaoDeBancoDeDados()
-                //.Rastrear(nomeRotulo, cerveja.Rotulo)
+                .Rastrear(nomeRotulo, cerveja.Rotulo)
                 .Executar(() =>
                 {
 
@@ -146,7 +145,7 @@ namespace Bebidas.API.Controllers.v1
                 .DaOperacao("Atualizar uma cerveja")
                 .V1()
                 .SemGerenciarConexaoDoBancoDeDados()
-                //.Rastrear(nomeRotulo, cerveja.Rotulo)
+                .Rastrear(nomeRotulo, cerveja.Rotulo)
                 .Executar(() =>
                 {
                     Cervejas.Remove(cervejaRetirada);

@@ -63,7 +63,6 @@ namespace Bebidas.API
             services.AddSingleton<IServiceBusTopicService, ServiceBusTopicService>();
 
             services.AddMvcCore().AddApiExplorer();
-            services.AddApplicationInsightsTelemetry(Configuration["ea501d85-6435-48ff-9a2e-10a66fa39fd2"]);
         }
 
         public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -72,8 +71,6 @@ namespace Bebidas.API
                 app.UseDeveloperExceptionPage();
             else
                 app.UseHsts();
-
-            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseHttpsRedirection();
 
