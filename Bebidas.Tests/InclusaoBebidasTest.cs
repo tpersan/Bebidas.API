@@ -1,6 +1,6 @@
+using Bebidas.AcessoDados.Consulta;
 using Bebidas.API.Contratos;
-using System.Data;
-using System.Dynamic;
+using Bebidas.API.Contratos.v1;
 using Xunit;
 
 namespace Bebidas.Tests
@@ -24,44 +24,31 @@ namespace Bebidas.Tests
 
             var inclusaoCerveja = new Bebidas.AcessoDados.Atualizacao.InclusaoCerveja(bancoWorkShop.BancoDados);
 
-            var id = inclusaoCerveja.Inserir(new API.Contratos.v1.Cerveja
+            var id = inclusaoCerveja.Inserir(new Cerveja
             {
                 Rotulo = rotuloCriado,
-                Apresentacao = new API.Contratos.v1.FormaApresentacao { Formato = "Teste" },
+                Apresentacao = new FormaApresentacao { Formato = "Teste" },
                 Fabricante = Fabricante.Ambev,
                 TipoCerveja = TipoCerveja.Golden
             });
 
 
             Assert.False(id == 0);
+            ConsultarDadosDaCerveja(rotuloCriado);
+        }
 
-            var retorno = ObterCerveja(rotuloCriado);
+        private void ConsultarDadosDaCerveja(string rotuloCriado)
+        {
+            var retorno = new ConultarCervejas(bancoWorkShop.BancoDados).Obter(rotuloCriado);
 
             Assert.NotNull(retorno);
-            Assert.NotNull(retorno.Dados);
-            Assert.Equals(retorno.Rotulo, rotuloCriado);
-            Assert.Equals(retorno.Id, id);
+            Assert.Equal(retorno.Rotulo, rotuloCriado.ToUpper());
+            Assert.Equal(retorno.Fabricante.Nome, Fabricante.Ambev.Nome.ToUpper());
+            Assert.Equal(retorno.TipoCerveja.Estilo, TipoCerveja.Golden.Estilo.ToUpper());
+            Assert.NotNull(retorno.Apresentacao);
+            Assert.Equal(retorno.Apresentacao.Formato, "TESTE");
+
         }
 
-
-
-
-        protected dynamic ObterCerveja(string rotulo)
-        {
-            var command = bancoWorkShop.BancoDados.Conexao().DbConnection.CreateCommand();
-            command.CommandText = $"select rotulo, dados, id from cervejas where rotulo = '{rotulo}'";
-
-            IDataReader dr = command.ExecuteReader();
-            dynamic retorno = new ExpandoObject();
-
-            if (dr.Read())
-            {
-                retorno.Rotulo = dr["rotulo"];
-                retorno.Dados = dr["dados"];
-                retorno.Id = dr["id"];
-            }
-
-            return retorno;
-        }
     }
 }

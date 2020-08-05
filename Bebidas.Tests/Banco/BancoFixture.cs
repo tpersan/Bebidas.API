@@ -34,7 +34,7 @@ namespace Bebidas.Tests
         }
 
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             baseWorkshop.DestruirLocalDB();
             GC.SuppressFinalize(this);

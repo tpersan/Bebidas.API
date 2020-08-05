@@ -15,7 +15,6 @@ namespace Bebidas.Tests
             NomeDaBase = nomeDaBase;
         }
 
-
         public void CriarLocalDB(bool sempreRecriar = false)
         {
             if (sempreRecriar)
@@ -25,8 +24,6 @@ namespace Bebidas.Tests
 
             var diretorio = Path.Combine(new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Parent.Parent.Parent.Parent.FullName);
             var dacPacFilePath = Path.Combine(diretorio, "script\\Bebidas.BD.dacpac");
-
-
 
             var dacService = new DacServices(connectionStringSetup);
             var options = new DacDeployOptions() { CreateNewDatabase = true };

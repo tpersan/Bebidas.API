@@ -16,7 +16,7 @@ namespace Bebidas.AcessoDados.Atualizacao
             var resultado = Executar(c =>
             {
                 c.AdicionarParametroDeEntrada("CERVEJA", cerveja.Rotulo);
-                c.AdicionarParametroDeEntrada("DADOS", cerveja.ConvertDados());
+                c.AdicionarParametroDeEntrada("DADOS", cerveja.ConverterEmTexto());
                 c.AdicionarParametroDeSaidaDoTipoIdentidade<int>("Id");
             });
 

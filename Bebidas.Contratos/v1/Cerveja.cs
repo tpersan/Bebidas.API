@@ -19,7 +19,12 @@ namespace Bebidas.API.Contratos.v1
 
     public static class CervejaExtensions
     {
-        public static string ConvertDados(this Cerveja cerveja)
+        public static Cerveja ConverterEmObjeto(this Cerveja cerveja, string dados)
+        {
+            return JsonConvert.DeserializeObject<Cerveja>(dados);
+        }
+
+        public static string ConverterEmTexto(this Cerveja cerveja)
         {
             if (string.IsNullOrEmpty(cerveja.Rotulo))
                 return "Rótulo não foi Definido!";
