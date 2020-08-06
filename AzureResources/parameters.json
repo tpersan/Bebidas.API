@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vulnerabilityAssessments_Default_storageContainerPath": {
+            "value": null
+        },
+        "sites_Bebidas_API_name": {
+            "value": null
+        },
+        "components_dev_name": {
+            "value": null
+        },
+        "serverfarms_DevPlan_name": {
+            "value": null
+        },
+        "sites_workshopmagapi_name": {
+            "value": null
+        },
+        "servers_workshopmagsql_name": {
+            "value": null
+        },
+        "namespaces_workshopsbdev_name": {
+            "value": null
+        },
+        "actionGroups_Application_Insights_Smart_Detection_name": {
+            "value": null
+        },
+        "smartdetectoralertrules_failure_anomalies___dev_name": {
+            "value": null
+        }
+    }
+}
